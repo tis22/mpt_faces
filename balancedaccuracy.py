@@ -17,10 +17,15 @@ class BalancedAccuracy:
     def __init__(self, nClasses):
         # TODO: Setup internal variables
         # NOTE: It is good practive to all reset() from here to make sure everything is properly initialized
+        self.nClasses = nClasses
+        self.reset()
+        
 
     def reset(self):
         # TODO: Reset internal states.
         # Called at the beginning of each epoch
+        self.correct_per_class = torch.zeros(self.nClasses)
+        self.total_per_class = torch.zeros(self.nClasses)
 
     def update(self, predictions, groundtruth):
         # TODO: Implement the update of internal states
