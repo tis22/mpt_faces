@@ -19,6 +19,16 @@ from cascade import create_cascade
 def record(args):
     # TODO: Implement the recording stage of your pipeline
     #   Create missing folders before you store data in them (os.mkdir)
+    if not os.path.exists(ROOT_FOLDER):
+        os.makedirs(ROOT_FOLDER)
+        
+    foldername = (args.folder).replace(" ", "")
+    folder_path = os.path.join(ROOT_FOLDER, foldername)
+    
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+
     #   Open The OpenCV VideoCapture Device to retrieve live images from your webcam (cv.VideoCapture)
     #   Initialize the Haar feature cascade for face recognition from OpenCV (cv.CascadeClassifier)
     #   If the cascade file (haarcascade_frontalface_default.xml) is missing, download it from google drive
