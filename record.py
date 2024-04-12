@@ -34,18 +34,27 @@ def record(args):
         print("Cannot open camera")
         exit()
 
+
+#   Initialize the Haar feature cascade for face recognition from OpenCV (cv.CascadeClassifier)
+    #face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
+#   If the cascade file (haarcascade_frontalface_default.xml) is missing, download it from google drive
+    if os.path.exists(cv.data.haarcascades + "haarcascade_frontalface_default.xml"):
+        HAAR_CASCADE = cv.data.haarcascades + "haarcascade_frontalface_default.xml"
+    else:
+        print("No HAAR_CASCADE-file found. Downloading it from Google Drive.")
+        url = "PERSONAL_LINK_TO_GOOGLE_DRIVE"
+        output = "haarcascade_frontalface_default.xml"
+        gdown.download(url, output, fuzzy=True)
+        HAAR_CASCADE = output
+
+    face_cascade = cv.CascadeClassifier(HAAR_CASCADE)
+
     frame_counter = 0
     saving_blocker = False
 
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
-
-    #   Initialize the Haar feature cascade for face recognition from OpenCV (cv.CascadeClassifier)
-        face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
-    
-    #   If the cascade file (haarcascade_frontalface_default.xml) is missing, download it from google drive
-    #   ??
 
     #   Run the cascade on every image to detect possible faces (CascadeClassifier::detectMultiScale)
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
