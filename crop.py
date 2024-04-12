@@ -41,27 +41,40 @@ def crop(args):
                     with open('deine_datei.csv', 'r') as csvfile:
                         csvreader = csv.reader(csvfile)
                         row = next(csvreader)
-                        top_bottom_border = int((int(row[2]) * args.border) / 2)
-                        left_right_border = int((int(row[3]) * args.border) / 2)
+                        x, y, w, h = map(int, row)
+
+                        top_bottom_border = int(h * args.border) / 2)
+                        left_right_border = int(w * args.border) / 2)
 
                     
                     frame = cv.imread(image_path)
                     frame = cv.copyMakeBorder(
                         frame, top_bottom_border, top_bottom_border, left_right_border, left_right_border, cv.BORDER_REFLECT
-                    )
+                        )
                     
-
-
-
-
-
-
     #   Crop the face with border added and save it to either the TRAIN_FOLDER or VAL_FOLDER
     #   You can use 
     #
     #       random.uniform(0.0, 1.0) < float(args.split) 
     #
     #   to decide how to split them.
+                        
+                    left = x - left_right_border
+                    right = x + w + left_right_border
+                    top = y - top_bottom_border
+                    bottom = y + h + top_bottom_border
+
+                    cropped_frame = frame[left:right, top:bottom]
+
+                    if random.uniform(0.0, 1.0) < float(args.split):
+                        file_path = os.path.join(VAL_FOLDER, image_file_name)
+                        cv.imwrite(file_path, cropped_frame)
+                    
+                    else:
+                        file_path = os.path.join(TRAIN_FOLDER, image_file_name)
+                        cv.imwrite(file_path, cropped_frame)
+
+
     if args.border is None:
         print("Cropping mode requires a border value to be set")
         exit()
