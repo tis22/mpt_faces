@@ -51,12 +51,14 @@ def record(args):
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
-        for (x,y,w,h) in faces:
-            frame = cv.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = frame[y:y+h, x:x+w]
+        frame_rectangle = frame.copy()
 
-        cv.imshow('webcam',frame)
+        for (x,y,w,h) in faces:
+            rame_rectangle = cv.rectangle(frame_rectangle,(x,y),(x+w,y+h),(255,0,0),2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = frame_rectangle[y:y+h, x:x+w]
+
+        cv.imshow('webcam',frame_rectangle)
         if cv.waitKey(1) == ord('q'):
             break
         
@@ -67,7 +69,7 @@ def record(args):
             filename = str(uuid.uuid4())
             file_path = os.path.join(folder_path, filename)
 
-            cv.imwrite(file_path + '.jpg',frame)
+            cv.imwrite(file_path + '.jpg', frame)
 
             csvfile = open(file_path + '.csv', 'w', newline='', encoding='utf-8')
             c = csv.writer(csvfile)
