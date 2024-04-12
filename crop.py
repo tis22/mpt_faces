@@ -43,8 +43,8 @@ def crop(args):
                         row = next(csvreader)
                         x, y, w, h = map(int, row)
 
-                        top_bottom_border = int(h * args.border) / 2)
-                        left_right_border = int(w * args.border) / 2)
+                        top_bottom_border = int((h * args.border) / 2)
+                        left_right_border = int((w * args.border) / 2)
 
                     
                     frame = cv.imread(image_path)
