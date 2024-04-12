@@ -38,9 +38,18 @@ def crop(args):
                     csv_file_name = image_file_name[:-4] + '.csv'
                     csv_path = os.path.join(folder_path, csv_file_name)
 
+                    with open('deine_datei.csv', 'r') as csvfile:
+                        csvreader = csv.reader(csvfile)
+                        row = next(csvreader)
+                        top_bottom_border = int((int(row[2]) * args.border) / 2)
+                        left_right_border = int((int(row[3]) * args.border) / 2)
 
-
-
+                    
+                    frame = cv.imread(image_path)
+                    frame = cv.copyMakeBorder(
+                        frame, top_bottom_border, top_bottom_border, left_right_border, left_right_border, cv.BORDER_REFLECT
+                    )
+                    
 
 
 
