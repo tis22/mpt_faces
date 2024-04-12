@@ -63,9 +63,7 @@ def record(args):
         frame_rectangle = frame.copy()
 
         for (x,y,w,h) in faces:
-            rame_rectangle = cv.rectangle(frame_rectangle,(x,y),(x+w,y+h),(255,0,0),2)
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = frame_rectangle[y:y+h, x:x+w]
+            frame_rectangle = cv.rectangle(frame_rectangle,(x,y),(x+w,y+h),(255,0,0),2)
 
         cv.imshow('webcam',frame_rectangle)
         if cv.waitKey(1) == ord('q'):
