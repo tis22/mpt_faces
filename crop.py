@@ -27,6 +27,26 @@ def crop(args):
     #   Iterate over all object folders and for each such folder over all full-frame images 
     #   Read the image (cv.imread) and the respective file with annotations you have saved earlier (e.g. CSV)
     #   Attach the right amount of border to your image (cv.copyMakeBorder)
+
+    for folder in os.listdir(ROOT_FOLDER):
+        folder_path = os.path.join(ROOT_FOLDER, folder)
+
+        if os.path.isdir(folder_path):
+            for image_file_name in os.listdir(folder_path):
+                if image_file_name.lower().endswith('.jpg'):
+                    image_path = os.path.join(folder_path, image_file_name)
+                    csv_file_name = image_file_name[:-4] + '.csv'
+                    csv_path = os.path.join(folder_path, csv_file_name)
+
+
+
+
+
+
+
+
+
+
     #   Crop the face with border added and save it to either the TRAIN_FOLDER or VAL_FOLDER
     #   You can use 
     #
@@ -43,11 +63,14 @@ def crop(args):
         exit()
 
 def delete_folder_contents(folder):
+    
+    # Go through every directory and folder and delete all files
     for root, dirs, files in os.walk(folder):
         for name in files:
             file_path = os.path.join(root, name)
             os.remove(file_path)
     
+    # Delete every folder
     for root, dirs, files in os.walk(folder, topdown=False):
         for name in dirs:
             dir_path = os.path.join(root, name)
