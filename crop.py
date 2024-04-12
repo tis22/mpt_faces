@@ -38,14 +38,15 @@ def crop(args):
                     csv_file_name = image_file_name[:-4] + '.csv'
                     csv_path = os.path.join(folder_path, csv_file_name)
 
-                    with open('deine_datei.csv', 'r') as csvfile:
+                    with open(csv_path, 'r') as csvfile:
                         csvreader = csv.reader(csvfile)
                         row = next(csvreader)
                         x, y, w, h = map(int, row)
 
-                        top_bottom_border = int((h * args.border) / 2)
-                        left_right_border = int((w * args.border) / 2)
+                        top_bottom_border = int((h * float(args.border)) / 2)
+                        left_right_border = int((w * float(args.border)) / 2)
 
+                        
                     
                     frame = cv.imread(image_path)
                     frame = cv.copyMakeBorder(
@@ -58,13 +59,17 @@ def crop(args):
     #       random.uniform(0.0, 1.0) < float(args.split) 
     #
     #   to decide how to split them.
-                        
+
+                    # adjust original coordinates according to the BORDER_REFLECT
+                    x = x + left_right_border
+                    y = y + top_bottom_border
+
                     left = x - left_right_border
                     right = x + w + left_right_border
                     top = y - top_bottom_border
                     bottom = y + h + top_bottom_border
 
-                    cropped_frame = frame[left:right, top:bottom]
+                    cropped_frame = frame[top:bottom, left:right]
 
                     if random.uniform(0.0, 1.0) < float(args.split):
                         file_path = os.path.join(VAL_FOLDER, image_file_name)
