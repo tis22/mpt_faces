@@ -37,7 +37,18 @@ class BalancedAccuracy:
         #
         # Groundtruth is a BATCH_SIZE x 1 long Tensor. It contains the index of the
         # ground truth class.
+         # Convert logits to predicted classes
+        _, predicted_classes = torch.max(predictions, 1)
+        # Update counts for correctly classified and total per class
+        for i in range(self.nClasses):
+            self.correct_per_class[i] += (predicted_classes[groundtruth == i] == groundtruth[groundtruth == i]).sum()
+            self.total_per_class[i] += (groundtruth == i).sum()
 
     def getBACC(self):
         # TODO: Calculcate and return balanced accuracy 
         # based on current internal state
+        # Calculate individual class accuracies
+        class_accuracies = self.correct_per_class / self.total_per_class
+        # Calculate balanced accuracy
+        balanced_accuracy = class_accuracies.mean()
+        return balanced_accuracy.item()  # Convert to Python scalar
