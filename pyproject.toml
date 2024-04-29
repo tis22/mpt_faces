@@ -1,68 +1,17 @@
-# see documentation, e.g.
-# - https://packaging.python.org/en/latest/specifications/declaring-project-metadata/#declaring-project-metadata
-# - https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
-# - https://www.python.org/dev/peps/pep-0621/
-
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
-authors = [
-    { name = "Meric", email = "meric.kervankiran@study.hs.duesseldorf.de" }
-]
-classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Natural Language :: English",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-]
-dependencies = []
-description = "Face Tracking"
-license = {file = "LICENSE"}
-name = "mpt_faces"
-readme = {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.8"
-version = "0.1.0"
-
-[project.optional-dependencies]
-dev = [
-    "black",
-    "flake8",
-    "isort",
-    "pytest",
-    "pytest-cov",
-    "ruff",
-    "numpy",
-    "scipy",
-    "numba",
-]
-publishing = [
-    "build",
-    "twine",
-    "wheel",
-]
-
 [tool.black]
 line-length = 120
 include = '\.pyi?$'
 exclude = '''
-/(
+(
     \.eggs
-)/
+    | /{{cookiecutter.directory_name}}/tests
+    | /hooks
+)
 '''
 
 [tool.isort]
 profile = "black"
-known_first_party = "mpt_faces"
-src_paths = ["mpt_faces", "tests"]
-line_length = "120"
 
-[tool.pylint]  # If you opt to use pylint
-# Pylint configuration options
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
