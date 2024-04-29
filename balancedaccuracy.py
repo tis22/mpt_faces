@@ -13,11 +13,33 @@ import torch
 # and then taking the average.
 
 # Balanced Accuracy
+
+# Generate synthetic test data for the BalancedAccuracy class
+
+# Define parameters for the test
+n_classes = 5
+batch_size = 100
+n_batches = 10
+
+# Random logits: tensor of size (batch_size * n_batches, n_classes)
+logits = torch.randn(batch_size * n_batches, n_classes)
+
+# Random ground truths: tensor of size (batch_size * n_batches,)
+# Ensuring that it is within the range [0, n_classes-1]
+groundtruth = torch.randint(0, n_classes, (batch_size * n_batches,))
+
+# Split the logits and groundtruth into batches
+logits_batches = logits.chunk(n_batches)
+groundtruth_batches = groundtruth.chunk(n_batches)
+
+(logits_batches, groundtruth_batches)
+
+
 class BalancedAccuracy:
     def __init__(self, nClasses):
         # TODO: Setup internal variables
         # NOTE: It is good practive to all reset() from here to make sure everything is properly initialized
-        self.nClasses = nClasses
+        self.nClasses = n_classes
         self.reset()
         
 
@@ -52,3 +74,7 @@ class BalancedAccuracy:
         # Calculate balanced accuracy
         balanced_accuracy = class_accuracies.mean()
         return balanced_accuracy.item()  # Convert to Python scalar
+    
+ba = BalancedAccuracy(n_classes)
+ba.update(logits, groundtruth)
+print(ba.getBACC())
