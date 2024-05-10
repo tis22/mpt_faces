@@ -6,11 +6,11 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'genalg_package'
-DESCRIPTION = ''
-URL = 'https://github.com/SophZoe/Genetic_Algorithm'
-EMAIL = 'marie-juliette.yek@study.hs-duesseldorf.de'
-AUTHOR = 'Joschua, Sophie, Anna, Marko, Marie'
+NAME = 'mtpfaces_package'
+DESCRIPTION = 'mpt_faces'
+URL = 'https://github.com/tis22/mpt_faces'
+EMAIL = 'sophie.paul@study.hs-duesseldorf.de'
+AUTHOR = 'Tim, Meric, Sophie'
 REQUIRES_PYTHON = '>=3.10.0'
 VERSION = '0.1.0'
 
@@ -23,17 +23,17 @@ REQUIRED = [
 
 # optional packages
 EXTRAS = {
-    # 'fancy feature': ['django'],
+    
 }
 
 ###### If you do change the License, remember to change the Trove Classifier for that!
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-# Import the README and use it as the long-description.
-# Note: this will only work if 'README.md' is present in your MANIFEST.in file!
+# Import the readme and use it as the long-description.
+
 try:
-    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    with io.open(os.path.join(here, 'readme.md'), encoding='utf-8') as f:
         long_description = '\n' + f.read()
 except FileNotFoundError:
     long_description = DESCRIPTION
