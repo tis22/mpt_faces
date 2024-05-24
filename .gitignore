@@ -1,0 +1,5 @@
+model.pt 
+/objects/
+/train/
+/val/
+/__pycache__/
