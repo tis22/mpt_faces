@@ -5,9 +5,8 @@ from network import Net
 #from cascade import create_cascade
 from transforms import ValidationTransform
 from PIL import Image
-
 import gdown
-import random
+
 
 # NOTE: This will be the live execution of your pipeline
 
