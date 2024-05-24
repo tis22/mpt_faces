@@ -52,7 +52,3 @@ class Net(nn.Module):
         x = self.fc2(x)
         
         return x
-
-# TEST OUTPUT
-model = Net(nClasses=10)
-print(model)

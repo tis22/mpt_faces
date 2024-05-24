@@ -72,11 +72,15 @@ def crop(args):
                     cropped_frame = frame[top:bottom, left:right]
 
                     if random.uniform(0.0, 1.0) < float(args.split):
-                        file_path = os.path.join(VAL_FOLDER, image_file_name)
+                        subfolder_path = os.path.join(VAL_FOLDER, folder)
+                        os.makedirs(subfolder_path, exist_ok=True)
+                        file_path = os.path.join(subfolder_path, image_file_name)
                         cv.imwrite(file_path, cropped_frame)
                     
                     else:
-                        file_path = os.path.join(TRAIN_FOLDER, image_file_name)
+                        subfolder_path = os.path.join(TRAIN_FOLDER, folder)
+                        os.makedirs(subfolder_path, exist_ok=True)
+                        file_path = os.path.join(subfolder_path, image_file_name)
                         cv.imwrite(file_path, cropped_frame)
 
 
