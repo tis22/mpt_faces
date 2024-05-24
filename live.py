@@ -61,13 +61,13 @@ def live(args):
 
         for (x,y,w,h) in faces:
             # Show blue border like at record.py
-            top_bottom_border = int((h * float(args.border)) / 2)
-            left_right_border = int((w * float(args.border)) / 2)
+            top_bottom_border_crop = int((h * float(args.border)) / 2)
+            left_right_border_crop = int((w * float(args.border)) / 2)
+            left = max(x - left_right_border_crop, 0)
+            right = min(x + w + left_right_border_crop, frame_border.shape[1])
+            top = max(y - top_bottom_border_crop, 0)
+            bottom = min(y + h + top_bottom_border_crop, frame_border.shape[0])
 
-            left = max(x - left_right_border, 0)
-            right = min(x + w + left_right_border, frame_border.shape[1])
-            top = max(y - top_bottom_border, 0)
-            bottom = min(y + h + top_bottom_border, frame_border.shape[0])
 
             if top >= bottom or left >= right:
                 print("Ungültige Rahmenkoordinaten:", top, bottom, left, right)
@@ -90,11 +90,23 @@ def live(args):
             with torch.no_grad():
                 model.eval()
                 output = model(transformed_image.unsqueeze(0))
-            predicted_class = torch.argmax(output, dim=1).item()
-            class_name = classes[predicted_class]
-    
-            cv.putText(frame_rectangle, class_name, (x-left_right_border, y-top_bottom_border - 10), cv.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
+                # predicted_class = torch.argmax(output, dim=1).item()
+                # class_name = classes[predicted_class]
+                probabilities = torch.nn.functional.softmax(output, dim=1)
+                predicted_class = torch.argmax(probabilities, dim=1).item()
+                accuracy = probabilities[0, predicted_class].item()
             
+            # Display the name and accuracy near the rectangle
+            person_name = classes[predicted_class]
+            text = f"{person_name} (Acc: {accuracy:.2f})"
+            
+            text_scale = min(w, h) / 200
+            text_size, _ = cv.getTextSize(text, cv.FONT_HERSHEY_SIMPLEX, text_scale, 2)
+            text_x = left + (right - left - text_size[0]) // 2
+            text_y = top - 10
+
+            cv.rectangle(frame_rectangle, (text_x - 5, text_y - text_size[1] - 5), (text_x + text_size[0] + 5, text_y + 5), (0, 0, 0), -1)
+            cv.putText(frame_rectangle, text, (text_x, text_y), cv.FONT_HERSHEY_SIMPLEX, text_scale, (255, 255, 255), 2)
 
         cv.imshow('webcam',frame_rectangle)
         if cv.waitKey(1) == ord('q'):

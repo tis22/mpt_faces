@@ -43,16 +43,16 @@ def crop(args):
                         row = next(csvreader)
                         x, y, w, h = map(int, row)
 
-                        top_bottom_border = int((h * float(args.border)) / 2)
-                        left_right_border = int((w * float(args.border)) / 2)
-
-                        
-                    
                     frame = cv.imread(image_path)
+                    height, width = frame.shape[:2]
+
+                    # Create BORDER_REFLECT using the original shape of the frame
+                    top_bottom_border = int((height * float(args.border)) / 2)
+                    left_right_border = int((width * float(args.border)) / 2)
+                    
                     frame = cv.copyMakeBorder(
                         frame, top_bottom_border, top_bottom_border, left_right_border, left_right_border, cv.BORDER_REFLECT
                         )
-                    
     #   Crop the face with border added and save it to either the TRAIN_FOLDER or VAL_FOLDER
     #   You can use 
     #
@@ -60,14 +60,17 @@ def crop(args):
     #
     #   to decide how to split them.
 
-                    # adjust original coordinates according to the BORDER_REFLECT
+                    # Adjust original coordinates according to the BORDER_REFLECT
+                    # Create the border by widening cropping-area using the width and height of the found face
+                    top_bottom_border_crop = int((h * float(args.border)) / 2)
+                    left_right_border_crop = int((w * float(args.border)) / 2)
                     x = x + left_right_border
                     y = y + top_bottom_border
 
-                    left = x - left_right_border
-                    right = x + w + left_right_border
-                    top = y - top_bottom_border
-                    bottom = y + h + top_bottom_border
+                    left = x - left_right_border_crop
+                    right = x + w + left_right_border_crop
+                    top = y - top_bottom_border_crop
+                    bottom = y + h + top_bottom_border_crop
 
                     cropped_frame = frame[top:bottom, left:right]
 
