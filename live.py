@@ -2,7 +2,8 @@ import cv2 as cv
 import torch
 import os
 from network import Net
-#from cascade import create_cascade
+
+# from cascade import create_cascade
 from transforms import ValidationTransform
 from PIL import Image
 import gdown
@@ -10,13 +11,14 @@ import gdown
 
 # NOTE: This will be the live execution of your pipeline
 
+
 def live(args):
-    # TODO: 
+    # TODO:
     #   Load the model checkpoint from a previous training session (check code in train.py)
     checkpoint = torch.load("model.pt")
-    model = Net(nClasses=len(checkpoint['classes']))
-    model.load_state_dict(checkpoint['model'])
-    classes = checkpoint['classes']
+    model = Net(nClasses=len(checkpoint["classes"]))
+    model.load_state_dict(checkpoint["model"])
+    classes = checkpoint["classes"]
 
     #   Initialize the face recognition cascade again (reuse code if possible)
     if os.path.exists(cv.data.haarcascades + "haarcascade_frontalface_default.xml"):
@@ -48,17 +50,22 @@ def live(args):
         height, width = frame.shape[:2]
         top_bottom_border = int((height * float(args.border)) / 2)
         left_right_border = int((width * float(args.border)) / 2)
-        
+
         frame_border = cv.copyMakeBorder(
-                            frame, top_bottom_border, top_bottom_border, left_right_border, left_right_border, cv.BORDER_REFLECT
-                        )
+            frame,
+            top_bottom_border,
+            top_bottom_border,
+            left_right_border,
+            left_right_border,
+            cv.BORDER_REFLECT,
+        )
 
         gray = cv.cvtColor(frame_border, cv.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
         frame_rectangle = frame_border.copy()
 
-        for (x,y,w,h) in faces:
+        for (x, y, w, h) in faces:
             # Show blue border like at record.py
             top_bottom_border_crop = int((h * float(args.border)) / 2)
             left_right_border_crop = int((w * float(args.border)) / 2)
@@ -67,12 +74,13 @@ def live(args):
             top = max(y - top_bottom_border_crop, 0)
             bottom = min(y + h + top_bottom_border_crop, frame_border.shape[0])
 
-
             if top >= bottom or left >= right:
                 print("Ungültige Rahmenkoordinaten:", top, bottom, left, right)
                 continue
 
-            frame_rectangle = cv.rectangle(frame_rectangle,(left, top),(right, bottom),(255,0,0),2)
+            frame_rectangle = cv.rectangle(
+                frame_rectangle, (left, top), (right, bottom), (255, 0, 0), 2
+            )
             cropped_face = frame_border[top:bottom, left:right]
 
             if cropped_face.size == 0:
@@ -94,21 +102,35 @@ def live(args):
                 probabilities = torch.nn.functional.softmax(output, dim=1)
                 predicted_class = torch.argmax(probabilities, dim=1).item()
                 accuracy = probabilities[0, predicted_class].item()
-            
+
             # Display the name and accuracy near the rectangle
             person_name = classes[predicted_class]
             text = f"{person_name} (Acc: {accuracy:.2f})"
-            
+
             text_scale = min(w, h) / 200
             text_size, _ = cv.getTextSize(text, cv.FONT_HERSHEY_SIMPLEX, text_scale, 2)
             text_x = left + (right - left - text_size[0]) // 2
             text_y = top - 10
 
-            cv.rectangle(frame_rectangle, (text_x - 5, text_y - text_size[1] - 5), (text_x + text_size[0] + 5, text_y + 5), (0, 0, 0), -1)
-            cv.putText(frame_rectangle, text, (text_x, text_y), cv.FONT_HERSHEY_SIMPLEX, text_scale, (255, 255, 255), 2)
+            cv.rectangle(
+                frame_rectangle,
+                (text_x - 5, text_y - text_size[1] - 5),
+                (text_x + text_size[0] + 5, text_y + 5),
+                (0, 0, 0),
+                -1,
+            )
+            cv.putText(
+                frame_rectangle,
+                text,
+                (text_x, text_y),
+                cv.FONT_HERSHEY_SIMPLEX,
+                text_scale,
+                (255, 255, 255),
+                2,
+            )
 
-        cv.imshow('webcam',frame_rectangle)
-        if cv.waitKey(1) == ord('q'):
+        cv.imshow("webcam", frame_rectangle)
+        if cv.waitKey(1) == ord("q"):
             break
 
     if args.border is None:
