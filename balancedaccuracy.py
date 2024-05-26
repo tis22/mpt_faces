@@ -1,7 +1,7 @@
 import torch
 
 # NOTE: This will be the calculation of balanced accuracy for your classification task
-# The balanced accuracy is defined as the average accuracy for each class. 
+# The balanced accuracy is defined as the average accuracy for each class.
 # The accuracy for an indiviual class is the ratio between correctly classified example to all examples of that class.
 # The code in train.py will instantiate one instance of this class.
 # It will call the reset methos at the beginning of each epoch. Use this to reset your
@@ -19,7 +19,6 @@ class BalancedAccuracy:
         # NOTE: It is good practive to all reset() from here to make sure everything is properly initialized
         self.nClasses = nClasses
         self.reset()
-        
 
     def reset(self):
         # TODO: Reset internal states.
@@ -37,15 +36,17 @@ class BalancedAccuracy:
         #
         # Groundtruth is a BATCH_SIZE x 1 long Tensor. It contains the index of the
         # ground truth class.
-         # Convert logits to predicted classes
+        # Convert logits to predicted classes
         _, predicted_classes = torch.max(predictions, 1)
         # Update counts for correctly classified and total per class
         for i in range(self.nClasses):
-            self.correct_per_class[i] += (predicted_classes[groundtruth == i] == groundtruth[groundtruth == i]).sum()
+            self.correct_per_class[i] += (
+                predicted_classes[groundtruth == i] == groundtruth[groundtruth == i]
+            ).sum()
             self.total_per_class[i] += (groundtruth == i).sum()
 
     def getBACC(self):
-        # TODO: Calculcate and return balanced accuracy 
+        # TODO: Calculcate and return balanced accuracy
         # based on current internal state
         # Calculate individual class accuracies
         class_accuracies = self.correct_per_class / self.total_per_class

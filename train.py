@@ -2,7 +2,6 @@ import torch
 import torch.nn
 from torch.utils.data import DataLoader
 import torchvision
-from torchvision import transforms
 from tqdm import tqdm
 from common import TRAIN_FOLDER, VAL_FOLDER
 from balancedaccuracy import BalancedAccuracy
@@ -13,6 +12,7 @@ from transforms import TrainingTransform, ValidationTransform
 # Make sure your other code works around this
 
 BATCH_SIZE = 8
+
 
 def train(args):
     # Setup the ImageFolder Dataset
@@ -27,8 +27,12 @@ def train(args):
     nClasses = len(trainset.classes)
 
     # Create data loader
-    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
-    validationloader = DataLoader(validationset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
+    trainloader = DataLoader(
+        trainset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True
+    )
+    validationloader = DataLoader(
+        validationset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True
+    )
 
     # Create the network, the optimizer and the loss function
     net = Net(nClasses)
@@ -57,8 +61,8 @@ def train(args):
                 optim.zero_grad()
 
                 out = net(batch)
-                assert(out.shape[0] == BATCH_SIZE)
-                assert(out.shape[1] == nClasses)
+                assert out.shape[0] == BATCH_SIZE
+                assert out.shape[1] == nClasses
 
                 bacc.update(out, labels)
 

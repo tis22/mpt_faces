@@ -23,8 +23,7 @@ def crop(args):
     else:
         os.makedirs(VAL_FOLDER)
 
-
-    #   Iterate over all object folders and for each such folder over all full-frame images 
+    #   Iterate over all object folders and for each such folder over all full-frame images
     #   Read the image (cv.imread) and the respective file with annotations you have saved earlier (e.g. CSV)
     #   Attach the right amount of border to your image (cv.copyMakeBorder)
 
@@ -33,12 +32,12 @@ def crop(args):
 
         if os.path.isdir(folder_path):
             for image_file_name in os.listdir(folder_path):
-                if image_file_name.lower().endswith('.jpg'):
+                if image_file_name.lower().endswith(".jpg"):
                     image_path = os.path.join(folder_path, image_file_name)
-                    csv_file_name = image_file_name[:-4] + '.csv'
+                    csv_file_name = image_file_name[:-4] + ".csv"
                     csv_path = os.path.join(folder_path, csv_file_name)
 
-                    with open(csv_path, 'r') as csvfile:
+                    with open(csv_path, "r") as csvfile:
                         csvreader = csv.reader(csvfile)
                         row = next(csvreader)
                         x, y, w, h = map(int, row)
@@ -49,16 +48,21 @@ def crop(args):
                     # Create BORDER_REFLECT using the original shape of the frame
                     top_bottom_border = int((height * float(args.border)) / 2)
                     left_right_border = int((width * float(args.border)) / 2)
-                    
+
                     frame = cv.copyMakeBorder(
-                        frame, top_bottom_border, top_bottom_border, left_right_border, left_right_border, cv.BORDER_REFLECT
-                        )
-    #   Crop the face with border added and save it to either the TRAIN_FOLDER or VAL_FOLDER
-    #   You can use 
-    #
-    #       random.uniform(0.0, 1.0) < float(args.split) 
-    #
-    #   to decide how to split them.
+                        frame,
+                        top_bottom_border,
+                        top_bottom_border,
+                        left_right_border,
+                        left_right_border,
+                        cv.BORDER_REFLECT,
+                    )
+                    #   Crop the face with border added and save it to either the TRAIN_FOLDER or VAL_FOLDER
+                    #   You can use
+                    #
+                    #       random.uniform(0.0, 1.0) < float(args.split)
+                    #
+                    #   to decide how to split them.
 
                     # Adjust original coordinates according to the BORDER_REFLECT
                     # Create the border by widening cropping-area using the width and height of the found face
@@ -79,13 +83,12 @@ def crop(args):
                         os.makedirs(subfolder_path, exist_ok=True)
                         file_path = os.path.join(subfolder_path, image_file_name)
                         cv.imwrite(file_path, cropped_frame)
-                    
+
                     else:
                         subfolder_path = os.path.join(TRAIN_FOLDER, folder)
                         os.makedirs(subfolder_path, exist_ok=True)
                         file_path = os.path.join(subfolder_path, image_file_name)
                         cv.imwrite(file_path, cropped_frame)
-
 
     if args.border is None:
         print("Cropping mode requires a border value to be set")
@@ -96,14 +99,15 @@ def crop(args):
         print("Border must be between 0 and 1")
         exit()
 
+
 def delete_folder_contents(folder):
-    
+
     # Go through every directory and folder and delete all files
     for root, dirs, files in os.walk(folder):
         for name in files:
             file_path = os.path.join(root, name)
             os.remove(file_path)
-    
+
     # Delete every folder
     for root, dirs, files in os.walk(folder, topdown=False):
         for name in dirs:
