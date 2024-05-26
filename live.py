@@ -6,7 +6,7 @@ from network import Net
 # from cascade import create_cascade
 from transforms import ValidationTransform
 from PIL import Image
-import gdown
+from record import get_haar_cascade_path
 
 
 # NOTE: This will be the live execution of your pipeline
@@ -21,15 +21,7 @@ def live(args):
     classes = checkpoint["classes"]
 
     #   Initialize the face recognition cascade again (reuse code if possible)
-    if os.path.exists(cv.data.haarcascades + "haarcascade_frontalface_default.xml"):
-        HAAR_CASCADE = cv.data.haarcascades + "haarcascade_frontalface_default.xml"
-    else:
-        print("No HAAR_CASCADE-file found. Downloading it from Google Drive.")
-        url = "PERSONAL_LINK_TO_GOOGLE_DRIVE"
-        output = "haarcascade_frontalface_default.xml"
-        gdown.download(url, output, fuzzy=True)
-        HAAR_CASCADE = output
-
+    HAAR_CASCADE = get_haar_cascade_path()
     face_cascade = cv.CascadeClassifier(HAAR_CASCADE)
 
     #   Also, create a video capture device to retrieve live footage from the webcam.
