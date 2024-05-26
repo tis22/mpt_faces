@@ -37,15 +37,7 @@ def record(args):
     #   Initialize the Haar feature cascade for face recognition from OpenCV (cv.CascadeClassifier)
     # face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
     #   If the cascade file (haarcascade_frontalface_default.xml) is missing, download it from google drive
-    if os.path.exists(cv.data.haarcascades + "haarcascade_frontalface_default.xml"):
-        HAAR_CASCADE = cv.data.haarcascades + "haarcascade_frontalface_default.xml"
-    else:
-        print("No HAAR_CASCADE-file found. Downloading it from Google Drive.")
-        url = "PERSONAL_LINK_TO_GOOGLE_DRIVE"
-        output = "haarcascade_frontalface_default.xml"
-        gdown.download(url, output, fuzzy=True)
-        HAAR_CASCADE = output
-
+    HAAR_CASCADE = get_haar_cascade_path()
     face_cascade = cv.CascadeClassifier(HAAR_CASCADE)
 
     frame_counter = 0
@@ -94,3 +86,16 @@ def record(args):
     if args.folder is None:
         print("Please specify folder for data to be recorded into")
         exit()
+
+def get_haar_cascade_path():
+    haarcascade_filename = "haarcascade_frontalface_default.xml"
+    haarcascade_path = cv.data.haarcascades + haarcascade_filename
+    
+    if os.path.exists(haarcascade_path):
+        return haarcascade_path
+    else:
+        print("No HAAR_CASCADE-file found. Downloading it from Google Drive.")
+        url = "PERSONAL_LINK_TO_GOOGLE_DRIVE"
+        output = haarcascade_filename
+        gdown.download(url, output, fuzzy=True)
+        return output
